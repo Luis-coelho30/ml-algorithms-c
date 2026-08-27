@@ -21,5 +21,6 @@ double triple_product(const Vector* vec1, const Vector* vec2, const Vector* vec3
 int sum_vector(Vector* vec1, Vector* vec2);
 int sum_scalar(Vector* vec1, double scalar);
 void multiply_scalar(Vector* vec1, double scalar);
+double euclidian_distance(Vector* vec1, Vector* vec2);
 
 #endif

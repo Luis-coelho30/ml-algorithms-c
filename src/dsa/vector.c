@@ -158,3 +158,34 @@ int multiply_scalar(Vector* vec1, double scalar) {
 
     return 0;
 }
+
+/*
+    Calculates the Euclidian Distance between two vectors
+    
+    Arguments:
+        Vector* vec1 - first operand 
+        Vector* vec2 - second operand
+
+    returns 
+        NaN if either vectors are NULL |
+        NaN if the vectors have different size |  
+        The Euclidian Distance on success
+*/
+double euclidian_distance(Vector* vec1, Vector* vec2) {
+
+    if(vec1!=NULL && vec2!=NULL) {
+        if(vec1->size == vec2->size) {
+            double diff;
+            double sum = 0;
+
+            for (int i = 0; i < vec1->size; i++) {
+                diff = vec1->data[i] - vec2->data[i];
+                sum += diff * diff;
+            }
+
+            return sqrt(sum);
+        }
+    }
+
+    return NAN;
+}
