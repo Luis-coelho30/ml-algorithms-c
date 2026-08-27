@@ -14,27 +14,31 @@ typedef struct {
         int size - the size of the desired vector
 
     returns 
-        A Vector type struct
+        A pointer to a vector type struct
 */
-Vector create_vector(double* data, int size) {
-    Vector v;
+Vector* create_vector(const double* data, int size) {
+    
+    if(size < 1) {
 
-    v.size = size;
-    v.data = malloc(size * sizeof(double));
+        Vector* v;
 
-    if(data != NULL) {
-        for(int i = 0; i < size; i++) {
-            v.data[i] = data[i];
+        v->size = size;
+
+        if(data != NULL) {
+            v->data = malloc(size * sizeof(double));
+            for(int i = 0; i < size; i++) {
+                v->data[i] = data[i];
+            }
         }
+
+        else {
+            v->data = calloc(v->size, sizeof(double));
+        }
+
+        return v;
     }
 
-    else {
-        for(int i = 0; i < size; i++) {
-            v.data[i] = data[i];
-        }
-    }
-
-    return v;
+    return NULL;
 }
 
 /*
@@ -45,7 +49,7 @@ Vector create_vector(double* data, int size) {
 */
 void free_vector(Vector* v) {
     free(v->data);
-    v->size = 0;
+    free(v);
 }
 
 /*
@@ -60,7 +64,7 @@ void free_vector(Vector* v) {
         NaN if the vectors have different sizes | 
         The value of the dot_product on success
 */
-double dot_product(Vector* vec1, Vector* vec2) {
+double dot_product(const Vector* vec1, const Vector* vec2) {
     if(vec1 == NULL || vec2 == NULL)
         return NAN;
     if(vec1->size != vec2->size)
@@ -75,11 +79,11 @@ double dot_product(Vector* vec1, Vector* vec2) {
     return result;
 }
 
-void cross_product(Vector* vec1, Vector* vec2) {
+void cross_product(const Vector* vec1, const Vector* vec2) {
 
 }
 
-void triple_product(Vector* vec1, Vector* vec2, Vector* vec3) {
+void triple_product(const Vector* vec1, const Vector* vec2, const Vector* vec3) {
 
 }
 
