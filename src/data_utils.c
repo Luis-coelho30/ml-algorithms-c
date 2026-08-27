@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void loadFeatureMatrix(const char *path, double ***matrix, double **vector, int *rows, int *cols)
+void loadFeatureMatrix(const char *path, Matrix **X, Vector **y)
 {
     // Get file size
     FILE *file = fopen(path, "rb");
@@ -32,50 +32,60 @@ void loadFeatureMatrix(const char *path, double ***matrix, double **vector, int 
     fclose(file);
 
     // Determine dimensions
-    *rows = 0;
-    *cols = 1;
+    int rows = 0;
+    int cols = 1;
+
+    if (bytes_read > 0 && buffer[bytes_read - 1] == '\n')
+        buffer[bytes_read - 1] = '\0';
+
 
     // Count rows
     for (char *p = buffer; *p != '\0'; p++) {
         if (*p == '\n')
-            (*rows)++;
+            rows++;
     }
 
     // Count columns from first row
     for (char *p = buffer; *p != '\n' && *p != '\0'; p++) {
         if (*p == ',')
-            (*cols)++;
+            cols++;
     }
 
     // Last column is the target values
-    (*cols)--;
+    cols--;
 
-    // Allocate space for feature matrix and target vector
-    *matrix = malloc(*rows * sizeof(double *));
+    // Temp flat buffers for parsing
+    double *X_temp = malloc(rows * cols * sizeof(double));
+    double *y_temp = malloc(rows * sizeof(double));
 
-    for (int i = 0; i < *rows; i++)
-        (*matrix)[i] = malloc(*cols * sizeof(double));
+    if (X_temp == NULL || y_temp == NULL) {
+        perror("Failed to allocate temp parse buffers");
+        free(buffer);
+        free(X_temp);
+        free(y_temp);
+        return;
+    }
 
-    *vector = malloc(*rows * sizeof(double));
 
-    // Parse file to load the matrix and vector
     char *ptr = buffer;
-
-    for (int i = 0; i < *rows; i++) {
-
-        for (int j = 0; j < *cols; j++) {
-            (*matrix)[i][j] = strtod(ptr, &ptr);
-
+ 
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            X_temp[i * cols + j] = strtod(ptr, &ptr);
             if (*ptr == ',')
                 ptr++;
         }
-
-        // Load last column into target vector
-        (*vector)[i] = strtod(ptr, &ptr);
-
+ 
+        y_temp[i] = strtod(ptr, &ptr);
+ 
         if (*ptr == '\n')
             ptr++;
     }
-
+ 
+    *X = create_matrix(X_temp, rows, cols);
+    *y = create_vector(y_temp, rows);
+ 
+    free(X_temp);
+    free(y_temp);
     free(buffer);
 }

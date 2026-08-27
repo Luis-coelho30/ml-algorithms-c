@@ -1,6 +1,9 @@
 #ifndef DATA_UTILS_H
 #define DATA_UTILS_H
 
-void loadFeatureMatrix(const char *path, double ***matrix, double **vector, int *rows, int *cols);
+#include "matrix.h"
+#include "vector.h"
+
+void loadFeatureMatrix(const char *path, Matrix **X, Vector **y);
 
 #endif
