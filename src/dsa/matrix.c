@@ -38,7 +38,7 @@ Matrix* create_matrix(const double* data, int rows, int cols) {
     matrix->size = rows * cols;
 
     if(data != NULL) {
-        matrix->data = malloc(matrix->size, sizeof(double));
+        matrix->data = malloc(matrix->size * sizeof(double));
         
         for (int i = 0; i < matrix->size; i++) {
             matrix->data[i] = data[i];
@@ -46,7 +46,7 @@ Matrix* create_matrix(const double* data, int rows, int cols) {
     } 
     
     else {
-        matrix->data = calloc(matrix->size, sizeof(double));
+        matrix->data = calloc(matrix->size * sizeof(double));
     }
     
     if (matrix->data == NULL) {
@@ -81,7 +81,7 @@ void free_matrix(Matrix* matrix) {
         M[row][col] if it is a valid position
 */
 double matrix_get(const Matrix* m, int row, int col) {
-    int pos = row * col;
+    int pos = row * m->cols + col;
     
     if(pos > 0 && pos < m->size) {
         return m->data[row * m->cols + col];
@@ -104,7 +104,7 @@ double matrix_get(const Matrix* m, int row, int col) {
         0 on success
 */
 int matrix_set(Matrix* m, int row, int col, double value) {
-    int pos = row * col;
+    int pos = row * m->cols + col;
     
     if(pos > 0 && pos < m->size) {
         m->data[row * m->cols + col] = value;
@@ -130,6 +130,8 @@ int matrix_scalar_multiply(Matrix* a, double scalar) {
         for(int i = 0; i < a->size; i++) {
             a->data[i] *= scalar; 
         }
+
+        return 0;
     }
 
     return -1;
@@ -152,15 +154,14 @@ Matrix* matrix_add(const Matrix* a, const Matrix* b) {
     if(a != NULL && b != NULL) {
 
         if(a->size == b->size){
-            double data[a->size];
 
-            for(int i = 0; i < a->size; i++) {
-                data[i] = a->data[i] + b->data[i]; 
-            }
-
-            Matrix* c = createMatrix(data, a->rows, a->cols);
+            Matrix* c = createMatrix(NULL, a->rows, a->cols);
             
             if (c != NULL) {
+                for(int i = 0; i < a->size; i++) {
+                    c->data[i] = a->data[i] + b->data[i]; 
+                }
+
                 return c;
             }
         }
@@ -186,15 +187,14 @@ Matrix* matrix_subtract(const Matrix* a, const Matrix* b) {
     if(a != NULL && b != NULL) {
 
         if(a->size == b->size){
-            double data[a->size];
 
-            for(int i = 0; i < a->size; i++) {
-                data[i] = a->data[i] - b->data[i]; 
-            }
-
-            Matrix* c = createMatrix(data, a->rows, a->cols);
+            Matrix* c = createMatrix(NULL, a->rows, a->cols);
             
             if (c != NULL) {
+                for(int i = 0; i < a->size; i++) {
+                    c->data[i] = a->data[i] - b->data[i]; 
+                }
+
                 return c;
             }
         }
@@ -291,17 +291,15 @@ Matrix* matrix_transpose(const Matrix* a) {
 
     if(a!=NULL) {
 
-        double data[a->size];
-
-        for (int i = 0; i < a->rows; i++) {
-            for (int j = 0; j < a->cols; j++) {
-                data[j * a->rows + i] = a->data[i * a->cols + j];
-            }
-        }
-        
-        Matrix* c = createMatrix(data, a->cols, a->rows);
+        Matrix* c = createMatrix(NULL, a->cols, a->rows);
             
         if (c != NULL) {
+            for (int i = 0; i < a->rows; i++) {
+                for (int j = 0; j < a->cols; j++) {
+                    c->data[j * a->rows + i] = a->data[i * a->cols + j];
+                }
+            }
+            
             return c;
         }
     }

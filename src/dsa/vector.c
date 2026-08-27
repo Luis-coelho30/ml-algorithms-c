@@ -18,24 +18,26 @@ typedef struct {
 */
 Vector* create_vector(const double* data, int size) {
     
-    if(size < 1) {
+    if(size >= 1) {
 
-        Vector* v;
+        Vector* v = malloc(sizeof(Vector));
 
-        v->size = size;
+        if(v != NULL) {
+            v->size = size;
 
-        if(data != NULL) {
-            v->data = malloc(size * sizeof(double));
-            for(int i = 0; i < size; i++) {
-                v->data[i] = data[i];
+            if(data != NULL) {
+                v->data = malloc(size * sizeof(double));
+                for(int i = 0; i < size; i++) {
+                    v->data[i] = data[i];
+                }
             }
-        }
 
-        else {
-            v->data = calloc(v->size, sizeof(double));
-        }
+            else {
+                v->data = calloc(v->size, sizeof(double));
+            }
 
-        return v;
+            return v;
+        }
     }
 
     return NULL;
@@ -146,7 +148,7 @@ int sum_scalar(Vector* vec1, double scalar) {
         -1 if the vector is NULL |  
         0 on success
 */
-void multiply_scalar(Vector* vec1, double scalar) {
+int multiply_scalar(Vector* vec1, double scalar) {
     if(vec1 == NULL)
         return -1;
 
