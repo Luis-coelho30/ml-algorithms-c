@@ -7,6 +7,48 @@ typedef struct {
 } Vector;
 
 /*
+    Creates a vector with the provided argument data
+    
+    Arguments:
+        double* data - the component data of the initialized vector. Defaults to 0 if NULL 
+        int size - the size of the desired vector
+
+    returns 
+        A Vector type struct
+*/
+Vector create_vector(double* data, int size) {
+    Vector v;
+
+    v.size = size;
+    v.data = malloc(size * sizeof(double));
+
+    if(data != NULL) {
+        for(int i = 0; i < size; i++) {
+            v.data[i] = data[i];
+        }
+    }
+
+    else {
+        for(int i = 0; i < size; i++) {
+            v.data[i] = data[i];
+        }
+    }
+
+    return v;
+}
+
+/*
+    Frees the vector's data and zeroes it's size. Must be called to avoid Memory Leaks 
+    
+    Arguments:
+        Vector* v - The vector to be freed
+*/
+void free_vector(Vector* v) {
+    free(v->data);
+    v->size = 0;
+}
+
+/*
     Calculates the dot product of two vectors
     
     Arguments:
