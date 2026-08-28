@@ -144,6 +144,8 @@ Vector* cross_product(const Vector* vec1, const Vector* vec2) {
                 result->data[1] = vec1->data[2] * vec2->data[0] - vec1->data[0] * vec2->data[2];
 
                 result->data[2] = vec1->data[0] * vec2->data[1] - vec1->data[1] * vec2->data[0];
+
+                return result;
             }
         }
     }
