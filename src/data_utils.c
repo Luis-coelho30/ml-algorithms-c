@@ -45,6 +45,8 @@ void loadFeatureMatrix(const char *path, Matrix **X, Vector **y)
             rows++;
     }
 
+    rows++;
+
     // Count columns from first row
     for (char *p = buffer; *p != '\n' && *p != '\0'; p++) {
         if (*p == ',')
