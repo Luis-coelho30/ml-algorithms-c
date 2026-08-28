@@ -91,6 +91,40 @@ void triple_product(const Vector* vec1, const Vector* vec2, const Vector* vec3) 
 
 
 /*
+    Adds vec1 to vec2 by taking the element-wise sum of both vectors
+    
+    Arguments:
+        Vector vec1 - first operand 
+        Vector vec2 - second operand
+
+    returns 
+        NULL if either vector is NULL | 
+        NULL if the vectors have different sizes |
+        NULL on failure to allocate result vector | 
+        The resulting vector on success
+*/
+Vector* vector_add(const Vector* vec1, const Vector* vec2) {
+    if(vec1 == NULL || vec2 == NULL)
+        return NULL;
+    if(vec1->size != vec2->size)
+        return NULL;
+
+    Vector* result = create_vector(NULL, vec1->size);
+
+    if(result!=NULL) {
+        result->size = vec1->size;
+        
+        for(int i = 0; i < vec1->size; i++) {
+            result->data[i] = vec1->data[i] + vec2->data[i];
+        }
+
+        return result;
+    }
+
+    return NULL;
+}
+
+/*
     Modifies vec1 in-place by taking the element-wise sum of both vectors
     
     Arguments:
@@ -102,7 +136,7 @@ void triple_product(const Vector* vec1, const Vector* vec2, const Vector* vec3) 
         -1 if the vectors have different sizes | 
         0 on success
 */
-int sum_vector(Vector* vec1, Vector* vec2) {
+int vector_add_in_place(Vector* vec1, const Vector* vec2) {
     if(vec1 == NULL || vec2 == NULL)
         return -1;
     if(vec1->size != vec2->size)
@@ -110,6 +144,65 @@ int sum_vector(Vector* vec1, Vector* vec2) {
 
     for(int i = 0; i < vec1->size; i++) {
         vec1->data[i] += vec2->data[i];
+    }
+
+    return 0;
+}
+
+/*
+    Subtracts vec1 by vec2 by taking the element-wise subtraction of both vectors
+    
+    Arguments:
+        Vector vec1 - first operand 
+        Vector vec2 - second operand
+
+    returns 
+        NULL if either vector is NULL | 
+        NULL if the vectors have different sizes |
+        NULL on failure to allocate result vector | 
+        The resulting vector on success
+*/
+Vector* vector_sub(const Vector* vec1, const Vector* vec2) {
+    if(vec1 == NULL || vec2 == NULL)
+        return NULL;
+    if(vec1->size != vec2->size)
+        return NULL;
+
+    Vector* result = create_vector(NULL, vec1->size);
+
+    if(result!=NULL) {
+        result->size = vec1->size;
+        
+        for(int i = 0; i < vec1->size; i++) {
+            result->data[i] = vec1->data[i] - vec2->data[i];
+        }
+
+        return result;
+    }
+
+    return NULL;
+}
+
+/*
+    Modifies vec1 in-place by taking the element-wise subtraction of both vectors
+    
+    Arguments:
+        Vector vec1 - destination vector and first operand 
+        Vector vec2 - second operand
+
+    returns 
+        -1 if either vector is NULL | 
+        -1 if the vectors have different sizes | 
+        0 on success
+*/
+int vector_sub_in_place(Vector* vec1, const Vector* vec2) {
+    if(vec1 == NULL || vec2 == NULL)
+        return -1;
+    if(vec1->size != vec2->size)
+        return -1;
+
+    for(int i = 0; i < vec1->size; i++) {
+        vec1->data[i] -= vec2->data[i];
     }
 
     return 0;
@@ -157,6 +250,33 @@ int multiply_scalar(Vector* vec1, double scalar) {
     }
 
     return 0;
+}
+
+/*
+    Calculates the of all the components in a vector 
+    e.g. vector_component_sum((1,1,1)) = 1 + 1 + 1 = 3
+    
+    Arguments:
+        Vector* vec1 - first operand 
+        Vector* vec2 - second operand
+
+    returns 
+        NaN if the vector is NULL |
+        The component sum on success
+*/
+double vector_component_sum(const Vector *v) {
+    
+    if(v!=NULL) {
+        double sum = 0;
+
+        for(int i = 0; i < v->size; i++) {
+            sum += v->data[i];
+        }
+
+        return sum;
+    }
+
+    return NAN;
 }
 
 /*
