@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <omp.h>
 
-#include "matrix.h"
-#include "vector.h"
+#include "matrix_par.h"
+#include "vector_par.h"
 
 /*
     Creates a Matrix with the provided argument data with multiple threads
@@ -19,7 +19,7 @@
         NULL in failure to allocate data for the matrix |
         A Matrix type struct
 */
-Matrix* create_matrix(const double* data, int rows, int cols) {
+Matrix* create_matrix_par(const double* data, int rows, int cols) {
     if(rows <= 0 || cols <= 0) {
         return NULL;
     }
@@ -56,82 +56,6 @@ Matrix* create_matrix(const double* data, int rows, int cols) {
 }
 
 /*
-    Frees the matrix's data and itself from the heap. Must be called to avoid Memory Leaks 
-    
-    Arguments:
-        Matrix* matrix - The Matrix to be freed
-*/
-void free_matrix(Matrix* matrix) {
-    free(matrix->data);
-    free(matrix);
-}
-
-/*
-    Returns the M[row][col] value if it is within the matrix boundaries 
-    
-    Arguments:
-        Matrix* matrix - The Matrix to extract the value from
-        int row - The row to be accessed
-        int col - The column to be accessed
-
-    Returns:
-        NaN if [row][col] is an invalid position
-        M[row][col] if it is a valid position
-*/
-double matrix_get(const Matrix* m, int row, int col) {
-    int pos = row * m->cols + col;
-    
-    if(pos > 0 && pos < m->size) {
-        return m->data[row * m->cols + col];
-    }
-
-    return NAN;
-}
-
-/*
-    Returns the M[row] pointer if it is within the matrix boundaries 
-    
-    Arguments:
-        Matrix* m - The Matrix to extract the value from
-        int row - The row to be accessed
-
-    Returns:
-        NULL if [row] is an invalid position
-        M[row] if it is a valid position
-*/
-double* matrix_get_row(const Matrix* m, int row) {
-    if(row >= 0 && row < m->rows) {
-        return &m->data[row * m->cols];
-    }
-    
-    return NULL;
-}
-
-/*
-    Sets the M[row][col] pos to a value if it is within the matrix boundaries 
-    
-    Arguments:
-        Matrix* matrix - The Matrix to set the value
-        int row - The row to be accessed
-        int col - The column to be accessed
-        double value - The value to be set
-
-    Returns:
-        -1 if the position is invalid
-        0 on success
-*/
-int matrix_set(Matrix* m, int row, int col, double value) {
-    int pos = row * m->cols + col;
-    
-    if(pos > 0 && pos < m->size) {
-        m->data[row * m->cols + col] = value;
-        return 0;
-    }
-
-    return -1;
-}
-
-/*
     Multiplies matrix A by a scalar value using multiple threads
     
     Arguments:
@@ -142,7 +66,7 @@ int matrix_set(Matrix* m, int row, int col, double value) {
         -1 if the position is invalid
         0 on success
 */
-int matrix_scalar_multiply(Matrix* a, double scalar) {
+int matrix_scalar_multiply_par(Matrix* a, double scalar) {
     if(a!=NULL) {
         #pragma omp parallel for
         for(int i = 0; i < a->size; i++) {
@@ -167,7 +91,7 @@ int matrix_scalar_multiply(Matrix* a, double scalar) {
         NULL if the matrixes are of different orders
         The resulting matrix C on success
 */
-Matrix* matrix_add(const Matrix* a, const Matrix* b) {
+Matrix* matrix_add_par(const Matrix* a, const Matrix* b) {
     
     if(a != NULL && b != NULL) {
 
@@ -201,7 +125,7 @@ Matrix* matrix_add(const Matrix* a, const Matrix* b) {
         NULL if the matrixes are of different orders
         The resulting matrix C on success
 */
-Matrix* matrix_subtract(const Matrix* a, const Matrix* b) {
+Matrix* matrix_subtract_par(const Matrix* a, const Matrix* b) {
     
     if(a != NULL && b != NULL) {
 
@@ -235,7 +159,7 @@ Matrix* matrix_subtract(const Matrix* a, const Matrix* b) {
         NULL if the a->column != b->row
         The resulting matrix C on success
 */
-Matrix* matrix_multiply(const Matrix* a, const Matrix* b) {
+Matrix* matrix_multiply_par(const Matrix* a, const Matrix* b) {
     
     if(a != NULL && b != NULL) {
 
@@ -276,7 +200,7 @@ Matrix* matrix_multiply(const Matrix* a, const Matrix* b) {
         NULL if the a->column != v->size
         The resulting vector on success
 */
-Vector* matrix_vec_multiply(const Matrix* a, const Vector* v) {
+Vector* matrix_vec_multiply_par(const Matrix* a, const Vector* v) {
     if(a != NULL && v != NULL) {
 
         if(a->cols == v->size) {
@@ -307,7 +231,7 @@ Vector* matrix_vec_multiply(const Matrix* a, const Vector* v) {
         NULL if the matrix is NULL
         The resulting transposed matrix
 */
-Matrix* matrix_transpose(const Matrix* a) {
+Matrix* matrix_transpose_par(const Matrix* a) {
 
     if(a!=NULL) {
 
@@ -338,7 +262,7 @@ Matrix* matrix_transpose(const Matrix* a) {
         -1 if the matrix is NULL
         0 on success
 */
-int matrix_fill(Matrix* a, double value) {
+int matrix_fill_par(Matrix* a, double value) {
 
     if(a!=NULL) {
         #pragma omp parallel for
@@ -361,7 +285,7 @@ int matrix_fill(Matrix* a, double value) {
         double* distances - the distance array for each point from each row 
 
 */
-void row_distance(const Matrix* A, const double* point, double* distances) {
+void row_distance_par(const Matrix* A, const double* point, double* distances) {
     
     if(A!=NULL && point!=NULL && distances != NULL) {
         #pragma omp parallel for
@@ -387,7 +311,7 @@ void row_distance(const Matrix* A, const double* point, double* distances) {
         NULL on failure to create the matrix
         The identity matrix I the specified size
 */
-Matrix* matrix_identity(int size) {
+Matrix* matrix_identity_par(int size) {
 
     if(size >= 1) {
         
@@ -403,22 +327,4 @@ Matrix* matrix_identity(int size) {
     }
 
     return NULL;
-}
-
-/*
-    Prints the matrix A into console
-    
-    Arguments:
-        Matrix* a - The Matrix to be printed
-
-*/
-void matrix_print(const Matrix* a) {
-    if (a != NULL) {
-        for (int i = 0; i < a->rows; i++) {
-            for (int j = 0; j < a->cols; j++) {
-                printf("%f ", a->data[i * a->cols + j]);
-            }
-            printf("\n");
-        }
-    }
 }
