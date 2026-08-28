@@ -24,6 +24,8 @@ Vector* create_vector(const double* data, int size) {
 
             if(data != NULL) {
                 v->data = malloc(size * sizeof(double));
+
+                #pragma omp parallel for
                 for(int i = 0; i < size; i++) {
                     v->data[i] = data[i];
                 }
@@ -111,6 +113,7 @@ double dot_product(const Vector* vec1, const Vector* vec2) {
 
     double result = 0;
 
+    #pragma omp parallel for
     for(int i = 0; i < vec1->size; i++) {
         result += vec1->data[i] * vec2->data[i];
     }
@@ -175,7 +178,6 @@ double triple_product(const Vector* vec1, const Vector* vec2, const Vector* vec3
     return NAN;
 }
 
-
 /*
     Adds vec1 to vec2 by taking the element-wise sum of both vectors
     
@@ -200,6 +202,7 @@ Vector* vector_add(const Vector* vec1, const Vector* vec2) {
     if(result!=NULL) {
         result->size = vec1->size;
         
+        #pragma omp parallel for
         for(int i = 0; i < vec1->size; i++) {
             result->data[i] = vec1->data[i] + vec2->data[i];
         }
@@ -228,6 +231,7 @@ int vector_add_in_place(Vector* vec1, const Vector* vec2) {
     if(vec1->size != vec2->size)
         return -1;
 
+    #pragma omp parallel for
     for(int i = 0; i < vec1->size; i++) {
         vec1->data[i] += vec2->data[i];
     }
@@ -259,6 +263,7 @@ Vector* vector_sub(const Vector* vec1, const Vector* vec2) {
     if(result!=NULL) {
         result->size = vec1->size;
         
+        #pragma omp parallel for
         for(int i = 0; i < vec1->size; i++) {
             result->data[i] = vec1->data[i] - vec2->data[i];
         }
@@ -287,6 +292,7 @@ int vector_sub_in_place(Vector* vec1, const Vector* vec2) {
     if(vec1->size != vec2->size)
         return -1;
 
+    #pragma omp parallel for
     for(int i = 0; i < vec1->size; i++) {
         vec1->data[i] -= vec2->data[i];
     }
@@ -309,6 +315,7 @@ int sum_scalar(Vector* vec1, double scalar) {
     if(vec1 == NULL)
         return -1;
 
+    #pragma omp parallel for
     for(int i = 0; i < vec1->size; i++) {
         vec1->data[i] += scalar;
     }
@@ -331,6 +338,7 @@ int multiply_scalar(Vector* vec1, double scalar) {
     if(vec1 == NULL)
         return -1;
 
+    #pragma omp parallel for
     for(int i = 0; i < vec1->size; i++) {
         vec1->data[i] *= scalar;
     }
@@ -355,6 +363,7 @@ double vector_component_sum(const Vector *v) {
     if(v!=NULL) {
         double sum = 0;
 
+        #pragma omp parallel for
         for(int i = 0; i < v->size; i++) {
             sum += v->data[i];
         }
@@ -384,6 +393,7 @@ double euclidian_distance(Vector* vec1, Vector* vec2) {
             double diff;
             double sum = 0;
 
+            #pragma omp parallel for
             for (int i = 0; i < vec1->size; i++) {
                 diff = vec1->data[i] - vec2->data[i];
                 sum += diff * diff;
