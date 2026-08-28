@@ -91,6 +91,25 @@ double matrix_get(const Matrix* m, int row, int col) {
 }
 
 /*
+    Returns the M[row] pointer if it is within the matrix boundaries 
+    
+    Arguments:
+        Matrix* m - The Matrix to extract the value from
+        int row - The row to be accessed
+
+    Returns:
+        NULL if [row] is an invalid position
+        M[row] if it is a valid position
+*/
+double* matrix_get_row(const Matrix* m, int row) {
+    if(row > 0 && row <= m->rows) {
+        return &m->data[row * m->cols];
+    }
+    
+    return NULL;
+}
+
+/*
     Sets the M[row][col] pos to a value if it is within the matrix boundaries 
     
     Arguments:
@@ -328,6 +347,26 @@ int matrix_fill(Matrix* a, double value) {
     }
 
     return -1;
+}
+
+/*
+    Calculates the row distance of every row in matrix A to a point 
+    
+    Arguments:
+        const Matrix* A - the matrix that contains the vectors
+        const double* point - the desired point 
+        double* distances - the distance array for each point from each row 
+
+*/
+void row_distance(const Matrix* A, const double* point, double* distances) {
+    for (int j = 0; j < A->rows; j++) {
+        double sum = 0.0;
+        for (int f = 0; f < A->cols; f++) {
+            double diff = A->data[j * A->cols + f] - point[f];
+            sum += diff * diff;
+        }
+        distances[j] = sqrt(sum);
+    }
 }
 
 /*

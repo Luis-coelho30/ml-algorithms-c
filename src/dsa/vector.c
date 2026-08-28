@@ -55,6 +55,46 @@ void free_vector(Vector* v) {
 }
 
 /*
+    Gets the value in the desired position 
+    
+    Arguments:
+        Vector* v - The vector to be accessed
+        int index - the index to be accessed in v's data
+
+    Returns:
+        NaN if index is out of boundaries |
+        the value on success
+*/
+double vector_get(const Vector *v, int index) {
+    if(index >= 0 && index < v->size) {
+        return v->data[index];
+    }
+
+    return NAN;
+}
+
+/*
+    Sets the value in the desired position 
+    
+    Arguments:
+        Vector* v - The vector to be accessed
+        int index - the index to be accessed in v's data
+        double value - the desired value
+
+    Returns:
+        -1 if index is out of boundaries |
+        0 on success
+*/
+int vector_set(const Vector *v, int index, double value) {
+    if(index >= 0 && index < v->size) {
+        v->data[index] = value;
+        return 0;
+    }
+
+    return -1;
+}
+
+/*
     Calculates the dot product of two vectors
     
     Arguments:

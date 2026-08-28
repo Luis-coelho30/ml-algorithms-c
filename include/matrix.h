@@ -19,6 +19,7 @@ Matrix* matrix_identity(int size);
 /* Access */
 
 double matrix_get(const Matrix *m, int row, int col);
+double* matrix_get_row(const Matrix* m, int row);
 int matrix_set(Matrix *m, int row, int col, double value);
 
 /* Operations */
@@ -29,6 +30,7 @@ Matrix *matrix_multiply(const Matrix *a, const Matrix *b);
 Matrix *matrix_scalar_multiply(Matrix *a, double scalar);
 Vector* matrix_vec_multiply(const Matrix* a, const Vector* v);
 Matrix *matrix_transpose(const Matrix *a);
+void row_distance(const Matrix* X, const double* point, double* distances);
 
 /* Utility */
 

@@ -13,6 +13,10 @@ typedef struct {
 Vector* create_vector(const double* data, int size);
 void free_vector(Vector* v);
 
+// Access
+double vector_get(const Vector *v, int index);
+double vector_set(const Vector *v, int index, double value);
+
 // Operations
 
 double dot_product(const Vector* vec1, const Vector* vec2);
