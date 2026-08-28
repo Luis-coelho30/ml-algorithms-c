@@ -1,13 +1,8 @@
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include "matrix.h"
 #include "vector.h"
-
-typedef struct {
-    double* data;
-    int rows;
-    int cols;
-    int size;
-} Matrix;
 
 /*
     Creates a Matrix with the provided argument data
@@ -46,7 +41,7 @@ Matrix* create_matrix(const double* data, int rows, int cols) {
     } 
     
     else {
-        matrix->data = calloc(matrix->size * sizeof(double));
+        matrix->data = calloc(matrix->size, sizeof(double));
     }
     
     if (matrix->data == NULL) {
@@ -102,7 +97,7 @@ double matrix_get(const Matrix* m, int row, int col) {
         M[row] if it is a valid position
 */
 double* matrix_get_row(const Matrix* m, int row) {
-    if(row > 0 && row <= m->rows) {
+    if(row >= 0 && row < m->rows) {
         return &m->data[row * m->cols];
     }
     
@@ -174,7 +169,7 @@ Matrix* matrix_add(const Matrix* a, const Matrix* b) {
 
         if(a->size == b->size){
 
-            Matrix* c = createMatrix(NULL, a->rows, a->cols);
+            Matrix* c = create_matrix(NULL, a->rows, a->cols);
             
             if (c != NULL) {
                 for(int i = 0; i < a->size; i++) {
@@ -207,7 +202,7 @@ Matrix* matrix_subtract(const Matrix* a, const Matrix* b) {
 
         if(a->size == b->size){
 
-            Matrix* c = createMatrix(NULL, a->rows, a->cols);
+            Matrix* c = create_matrix(NULL, a->rows, a->cols);
             
             if (c != NULL) {
                 for(int i = 0; i < a->size; i++) {
@@ -239,7 +234,7 @@ Matrix* matrix_multiply(const Matrix* a, const Matrix* b) {
     if(a != NULL && b != NULL) {
 
         if(a->cols == b->rows){
-            Matrix* c = createMatrix(NULL, a->rows, b->cols);
+            Matrix* c = create_matrix(NULL, a->rows, b->cols);
 
             if (c != NULL) {
                 int index_a, index_b, index_c;
@@ -310,7 +305,7 @@ Matrix* matrix_transpose(const Matrix* a) {
 
     if(a!=NULL) {
 
-        Matrix* c = createMatrix(NULL, a->cols, a->rows);
+        Matrix* c = create_matrix(NULL, a->cols, a->rows);
             
         if (c != NULL) {
             for (int i = 0; i < a->rows; i++) {
@@ -384,7 +379,7 @@ Matrix* matrix_identity(int size) {
 
     if(size >= 1) {
         
-        Matrix *identity = createMatrix(NULL, size, size);
+        Matrix *identity = create_matrix(NULL, size, size);
 
         if(identity!=NULL) {
             for(int i = 0; i < size; i++)

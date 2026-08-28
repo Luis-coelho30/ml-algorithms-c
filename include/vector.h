@@ -15,7 +15,7 @@ void free_vector(Vector* v);
 
 // Access
 double vector_get(const Vector *v, int index);
-double vector_set(const Vector *v, int index, double value);
+int vector_set(const Vector *v, int index, double value);
 
 // Operations
 
@@ -28,7 +28,7 @@ int vector_add_in_place(Vector* vec1, const Vector* vec2);
 Vector* vector_sub(const Vector* vec1, const Vector* vec2);
 int vector_sub_in_place(Vector* vec1, const Vector* vec2);
 int sum_scalar(Vector* vec1, double scalar);
-void multiply_scalar(Vector* vec1, double scalar);
+int multiply_scalar(Vector* vec1, double scalar);
 double vector_component_sum(const Vector *v);
 double euclidian_distance(Vector* vec1, Vector* vec2);
 

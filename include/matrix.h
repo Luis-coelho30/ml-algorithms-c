@@ -1,7 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
-
-typedef struct Vector Vector;
+#include "vector.h"
 
 typedef struct {
     double* data;
@@ -27,7 +26,7 @@ int matrix_set(Matrix *m, int row, int col, double value);
 Matrix *matrix_add(const Matrix *a, const Matrix *b);
 Matrix *matrix_subtract(const Matrix *a, const Matrix *b);
 Matrix *matrix_multiply(const Matrix *a, const Matrix *b);
-Matrix *matrix_scalar_multiply(Matrix *a, double scalar);
+int matrix_scalar_multiply(Matrix *a, double scalar);
 Vector* matrix_vec_multiply(const Matrix* a, const Vector* v);
 Matrix *matrix_transpose(const Matrix *a);
 void row_distance(const Matrix* X, const double* point, double* distances);

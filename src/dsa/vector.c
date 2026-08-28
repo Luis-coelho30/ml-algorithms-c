@@ -1,10 +1,7 @@
 #include <math.h>
 #include <stdio.h>
-
-typedef struct {
-    double* data;
-    int size;
-} Vector;
+#include <stdlib.h>
+#include "vector.h"
 
 /*
     Creates a vector with the provided argument data
@@ -121,12 +118,12 @@ double dot_product(const Vector* vec1, const Vector* vec2) {
     return result;
 }
 
-void cross_product(const Vector* vec1, const Vector* vec2) {
-
+Vector* cross_product(const Vector* vec1, const Vector* vec2) {
+    return NULL;
 }
 
-void triple_product(const Vector* vec1, const Vector* vec2, const Vector* vec3) {
-
+double triple_product(const Vector* vec1, const Vector* vec2, const Vector* vec3) {
+    return NAN;
 }
 
 
