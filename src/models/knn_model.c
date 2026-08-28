@@ -1,12 +1,9 @@
 #include "vector.h"
 #include "matrix.h"
 #include "utils.h"
-
-typedef struct {
-    Matrix *X_train;
-    Vector *y_train;
-    int k;
-} KNNModel;
+#include "knn_model.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 KNNModel* knn_model_init(int n_neighbours);
 void knn_model_learn(KNNModel* model, Matrix* X_train, Vector* y_train);
@@ -131,7 +128,5 @@ Vector* knn_model_classify(KNNModel* model, Matrix *X_test) {
 
 */
 void knn_model_free(KNNModel* model) {
-    free_matrix(model->X_train);
-    free_vector(model->y_train);
     free(model);
 }

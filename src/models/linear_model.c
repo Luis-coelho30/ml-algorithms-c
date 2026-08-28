@@ -1,12 +1,7 @@
 #include "vector.h"
 #include "matrix.h"
-
-typedef struct {
-    Vector* weights;
-    double bias;
-    double learning_rate;
-    int epochs;
-} LinearModel;
+#include "linear_model.h"
+#include <stdlib.h>
 
 LinearModel* linear_model_init(int n_features, double lr, int epochs);
 void linear_model_learn(LinearModel* model, Matrix* X_train, Vector* y_train);
