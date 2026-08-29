@@ -16,6 +16,7 @@ SRC_PAR = src/dsa/vector_par.c \
           src/models/linear_model_par.c \
           src/models/linear_model.c \
           src/models/knn_model_par.c \
+          src/models/knn_model.c \
           src/data_utils.c \
           src/utils.c
 

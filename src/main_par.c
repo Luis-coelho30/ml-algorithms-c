@@ -4,6 +4,7 @@
 #include "utils.h"
 
 #include "linear_model_par.h"
+#include "knn_model_par.h"
 
 void test_linear_regression_par(int n_threads) {
     printf("=== Linear Regression Parallel Test (threads=%d) ===\n", n_threads);
@@ -40,9 +41,47 @@ void test_linear_regression_par(int n_threads) {
     linear_model_free(model);
 }
 
+void test_knn_par(int n_threads) {
+    printf("=== KNN Parallel Test (threads=%d) ===\n", n_threads);
+
+    omp_set_num_threads(n_threads);
+
+    Matrix *X_train;
+    Vector *y_train;
+    loadFeatureMatrix("data/housing_knn_train.csv", &X_train, &y_train);
+
+    KNNModel *model = knn_model_init(5);
+    knn_model_learn(model, X_train, y_train);
+
+    Matrix *X_test;
+    Vector *y_test;
+    loadFeatureMatrix("data/housing_knn_test.csv", &X_test, &y_test);
+
+    double start = omp_get_wtime();
+    Vector *predictions = knn_model_par_classify(model, X_test);
+    double classify_time = omp_get_wtime() - start;
+
+    printf("Accuracy: %.4f\n", accuracy(predictions, y_test));
+    printf("Classify time: %.4fs\n", classify_time);
+
+    Matrix *cm = confusion_matrix(predictions, y_test, 5);
+    matrix_print(cm);
+    free_matrix(cm);
+
+    free_vector(predictions);
+    free_vector(y_test);
+    free_vector(y_train);
+    free_matrix(X_train);
+    free_matrix(X_test);
+    knn_model_free(model);
+}
+
+
 int main() {
     int thread_counts[] = {1, 2, 4, 8};
     for (int t = 0; t < 4; t++)
         test_linear_regression_par(thread_counts[t]);
+    for (int t = 0; t < 4; t++)
+        test_knn_par(thread_counts[t]);
     return 0;
 }
