@@ -29,9 +29,14 @@ void test_linear_regression_par(int n_threads) {
     Vector *predictions = linear_model_par_predict(model, X_test);
     double predict_time = omp_get_wtime() - start;
 
+    static double baseline_lr = 0.0;
+    if (n_threads == 1) baseline_lr = learn_time;
+    double speedup = (baseline_lr > 0.0) ? baseline_lr / learn_time : 1.0;
+
     printf("RMSE: %.4f\n", rmse(predictions, y_test));
     printf("Learn time:   %.4fs\n", learn_time);
     printf("Predict time: %.4fs\n", predict_time);
+    printf("Speedup:       %.2fx\n", speedup);
 
     free_vector(predictions);
     free_vector(y_test);
@@ -61,8 +66,13 @@ void test_knn_par(int n_threads) {
     Vector *predictions = knn_model_par_classify(model, X_test);
     double classify_time = omp_get_wtime() - start;
 
+    static double baseline_knn = 0.0;
+    if (n_threads == 1) baseline_knn = classify_time;
+    double speedup = (baseline_knn > 0.0) ? baseline_knn / classify_time : 1.0;
+
     printf("Accuracy: %.4f\n", accuracy(predictions, y_test));
     printf("Classify time: %.4fs\n", classify_time);
+    printf("Speedup:       %.2fx\n", speedup);
 
     Matrix *cm = confusion_matrix(predictions, y_test, 5);
     matrix_print(cm);
